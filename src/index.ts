@@ -1,14 +1,13 @@
-import { Application, Loader, Texture, AnimatedSprite } from "pixi.js";
+import { Application, Loader, Texture, AnimatedSprite, Rectangle } from "pixi.js";
 import { getSpine } from "./spine-example";
 import { getLayersExample } from "./layers-example";
-import "./style.css";
+import { Game } from "./game/game";
+import "./styles/index.scss"; //csantos: import styles
 
 declare const VERSION: string;
 
 const gameWidth = 800;
 const gameHeight = 600;
-
-console.log(`Welcome from pixi-typescript-boilerplate ${VERSION}`);
 
 const app = new Application({
     backgroundColor: 0xd3d3d3,
@@ -16,25 +15,27 @@ const app = new Application({
     height: gameHeight,
 });
 
+console.log(`Welcome from pixi-typescript-boilerplate ${VERSION}`);
+
 window.onload = async (): Promise<void> => {
-    await loadGameAssets();
+    (window as any).__game = new Game();
 
-    document.body.appendChild(app.view);
+    // await loadGameAssets();
 
-    getLayersExample(app);
+    // document.body.appendChild(app.view);
 
-    resizeCanvas();
+    // getLayersExample(app);
 
-    const birdFromSprite = getBird();
-    birdFromSprite.anchor.set(0.5, 0.5);
-    birdFromSprite.position.set(gameWidth / 2, 530);
+    // const birdFromSprite = getBird();
+    // birdFromSprite.anchor.set(0.5, 0.5);
+    // birdFromSprite.position.set(gameWidth / 2, 530);
 
-    const spineExample = getSpine();
-    spineExample.position.y = 580;
+    // const spineExample = getSpine();
+    // spineExample.position.y = 580;
 
-    app.stage.addChild(birdFromSprite);
-    app.stage.addChild(spineExample);
-    app.stage.interactive = true;
+    // app.stage.addChild(birdFromSprite);
+    // app.stage.addChild(spineExample);
+    // app.stage.interactive = true;
 };
 
 async function loadGameAssets(): Promise<void> {
@@ -53,18 +54,6 @@ async function loadGameAssets(): Promise<void> {
 
         loader.load();
     });
-}
-
-function resizeCanvas(): void {
-    const resize = () => {
-        app.renderer.resize(window.innerWidth, window.innerHeight);
-        app.stage.scale.x = window.innerWidth / gameWidth;
-        app.stage.scale.y = window.innerHeight / gameHeight;
-    };
-
-    resize();
-
-    window.addEventListener("resize", resize);
 }
 
 function getBird(): AnimatedSprite {

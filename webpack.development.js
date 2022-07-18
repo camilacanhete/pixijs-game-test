@@ -11,13 +11,11 @@ const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "package.json"), "ut
 module.exports = (env) => {
     const devConfig = {
         mode: env.mode,
-
-        devtool: "inline-source-map",
-
-        devServer: {
-            open: true,
+        output: {
+            path: path.resolve(__dirname, "dist"),
+            filename: "[name].[contenthash].js",
         },
-
+        devtool: "inline-source-map",
         module: {
             rules: [
                 {
@@ -36,14 +34,9 @@ module.exports = (env) => {
                 },
             ],
         },
-        output: {
-            path: path.resolve(__dirname, "dist"),
-            filename: "[name].js",
-        },
-
         plugins: [
             new MiniCssExtractPlugin({
-                filename: "[name].css",
+                filename: "[name].[contenthash].css",
             }),
 
             new ESLintPlugin(),
@@ -52,6 +45,16 @@ module.exports = (env) => {
                 VERSION: JSON.stringify(pkg.version + "dev"),
             }),
         ],
+        devServer: {
+            static: {
+                directory: path.resolve(__dirname, './src'),
+                publicPath: '/dist/',
+            },
+            host: '0.0.0.0', //enabling mobile testing
+            port: 8080,
+            open: true,
+            historyApiFallback: true, //single page app
+        },
     };
 
     return devConfig;

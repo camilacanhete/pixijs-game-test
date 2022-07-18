@@ -20,12 +20,28 @@ module.exports = (env) => {
         module: {
             rules: [
                 {
-                    test: /\.css$/i,
+                    test: /\.(sa|sc|c)ss$/,
+                    exclude: /(node_modules|bower_components)/,
                     use: [
+                        MiniCssExtractPlugin.loader,
                         {
-                            loader: MiniCssExtractPlugin.loader,
+                            loader: 'css-loader',
+                            options: {
+                                sourceMap: true,
+                                url: true,
+                            },
                         },
-                        "css-loader",
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                // Prefer `dart-sass`
+                                implementation: require('sass'),
+                                sourceMap: true,
+                                sassOptions: {
+                                    outputStyle: 'expanded',
+                                },
+                            },
+                        },
                     ],
                 },
             ],
@@ -37,7 +53,10 @@ module.exports = (env) => {
         },
 
         plugins: [
-            new HtmlWebpackPlugin(),
+            new HtmlWebpackPlugin({
+                hash: true,
+                template: './src/index.html',
+            }),
             new CopyPlugin({
                 patterns: [
                     {
