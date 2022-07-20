@@ -40,6 +40,10 @@ export class Scene extends Stage {
 
     }
 
+    changeScene(scene: string): void {
+        this.game.startScene(scene);
+    }
+
     onWindowResize(): void {
         this.screenWidth = Game.GAME_WIDTH;
         this.screenHeight = Game.GAME_HEIGHT;

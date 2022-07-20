@@ -1,18 +1,21 @@
 import { Loader } from "pixi.js";
 import { Scene } from "./scene";
-import { Const } from "../game/const";
+import { RESOURCES } from "../game/consts";
 import { Game } from "../game/game";
 import { LoadingBar } from "../components/loading-bar";
-
+import { BtnPlay } from "../components/btn-play";
 
 export class Loading extends Scene {
 
     private loader: Loader;
-    private loadingBar: LoadingBar | null;
+    private loadingBar: LoadingBar;
+    private btnPlay: BtnPlay;
 
     constructor(game: Game) {
         super(game);
         this.loader = new Loader("../../assets/");
+        this.loadingBar = new LoadingBar(this);
+        this.btnPlay = new BtnPlay(this);
     }
 
     start(): void {
@@ -21,10 +24,6 @@ export class Loading extends Scene {
         this.bindEvents();
         this.createComponents();
         this.preload();
-    }
-
-    createComponents(): void {
-        this.loadingBar = new LoadingBar(this);
     }
 
     bindEvents(): void {
@@ -36,25 +35,29 @@ export class Loading extends Scene {
 
     removeEvents(): void {
         this.loader.onProgress.detachAll();
+        this.loadingBar.removeEvents();
+        this.btnPlay.removeEvents();
     }
 
     preload(): void {
         console.log("Loading: loading starting");
-        this.loader.add(Const.ATLAS.INGAME, "/img/square_nodetails_outline.json");
+        this.loader.add(RESOURCES.ATLAS.INGAME, "/img/square_nodetails_outline.json");
         this.loader.load();
     }
 
     onLoad(): void {
-        console.log(this.loader.progress);
+        //console.log(this.loader.progress);
+        this.loadingBar.updateProgress(this.loader.progress);
     }
 
     onLoadComplete(): void {
         console.log("Loading: loading complete");
-        //this.game.startScene(Const.SCENES.LOADING);
+        this.btnPlay.setActiveState(true);
     }
 
     onWindowResize(): void {
         super.onWindowResize();
         this.loadingBar.onWindowResize();
+        this.btnPlay.onWindowResize();
     }
 }

@@ -3,14 +3,27 @@
         "target": "ES2020",
         "module": "ES2020" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
         "strict": true,
+        "allowJs": true,
+        "checkJs": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
         "paths": {
-            "mini-signals": ["./node_modules/resource-loader/typings/mini-signals.d.ts"]
+            "mini-signals": [
+                "./node_modules/resource-loader/typings/mini-signals.d.ts"
+            ]
         },
         "skipLibCheck": false,
-        "lib": ["DOM", "ES2020"]
+        "lib": [
+            "DOM",
+            "ES2020"
+        ],
+        "typeRoots": [
+            "src/@types",
+            "node_modules/@types"
+        ]
     },
-    "include": ["./src/index.ts"]
+    "include": [
+        "./src/index.ts"
+    ]
 }

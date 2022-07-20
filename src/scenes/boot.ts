@@ -1,5 +1,5 @@
 import { Loader } from "pixi.js";
-import { Const } from "../game/const";
+import { SCENES, RESOURCES } from "../game/consts";
 import { Game } from "../game/game";
 import { Scene } from "./scene";
 
@@ -33,13 +33,13 @@ export class Boot extends Scene {
 
     preload(): void {
         console.log("Boot: loading starting");
-        this.loader.add(Const.ATLAS.LOADING, "/img/loadingAtlas.json");
+        this.loader.add(RESOURCES.ATLAS.LOADING, "/img/loadingAtlas.json");
         this.loader.load();
     }
 
     onLoadComplete(): void {
         console.log("Boot: loading complete");
         if (this.domElement !== null) this.domElement.remove();
-        this.game.startScene(Const.SCENES.LOADING);
+        this.changeScene(SCENES.LIST.LOADING);
     }
 }

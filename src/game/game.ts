@@ -1,8 +1,9 @@
 import { Application, IApplicationOptions } from "pixi.js";
-import { Const } from "./const";
+import { SCENES } from "./consts";
 import { Scene } from "../scenes/scene";
 import { Boot } from "../scenes/boot";
 import { Loading } from "../scenes/loading";
+import { Ingame } from "../scenes/ingame";
 
 export class Game extends Application {
 
@@ -13,7 +14,7 @@ export class Game extends Application {
 
     constructor() {
         const options: IApplicationOptions = {
-            backgroundColor: 0xFFFFFF,
+            backgroundColor: 0xF7F4DA,
             width: Game.GAME_WIDTH,
             height: Game.GAME_HEIGHT,
         };
@@ -22,7 +23,7 @@ export class Game extends Application {
 
         document.body.appendChild(this.view);
         this.bindEvents();
-        //this.onWindowResize();
+        this.onWindowResize();
         this.startScene();
     }
 
@@ -33,8 +34,11 @@ export class Game extends Application {
 
     startScene(scene?: string): void {
         switch (scene) {
-            case Const.SCENES.LOADING:
+            case SCENES.LIST.LOADING:
                 this.scene = new Loading(this);
+                break;
+            case SCENES.LIST.INGAME:
+                this.scene = new Ingame(this);
                 break;
             default:
                 this.scene = new Boot(this);
