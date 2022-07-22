@@ -6,6 +6,12 @@ export class GAME {
         PAUSED: "GAME_PAUSED",
         OVER: "GAME_OVER",
     }
+
+    static EVENTS: { [state: string]: string } = {
+        TIMER_START: "TIMER_START",
+        TIMER_COUNT: "TIMER_COUNT",
+        TIMER_END: "TIMER_END",
+    }
 }
 
 export class SCENES {
@@ -39,4 +45,8 @@ export class BOARD {
     static EVENTS: { [state: string]: string } = {
         SELECT_TILE: "SELECT_TILE",
     }
+}
+
+export class FONT {
+    static BASE_SCREEN_SIZE: number = 1024;
 }

@@ -1,3 +1,4 @@
+import FontFaceObserver from 'fontfaceobserver';
 import { Loader } from "pixi.js";
 import { SCENES, RESOURCES } from "../game/consts";
 import { Game } from "../game/game";
@@ -22,6 +23,7 @@ export class Boot extends Scene {
     }
 
     bindEvents(): void {
+        this.onFontLoad = this.onFontLoad.bind(this);
         this.onLoadComplete = this.onLoadComplete.bind(this);
         this.loader.onComplete.once(this.onLoadComplete); // called once when the queued resources all load.
     }
@@ -33,6 +35,11 @@ export class Boot extends Scene {
 
     preload(): void {
         console.log("Boot: loading starting");
+        const font: FontFaceObserver = new FontFaceObserver('Fredoka One');
+        font.load().then(this.onFontLoad);
+    }
+
+    onFontLoad(): void {
         this.loader.add(RESOURCES.ATLAS.LOADING, "/img/loadingAtlas.json");
         this.loader.load();
     }

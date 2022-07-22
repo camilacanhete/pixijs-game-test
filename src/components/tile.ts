@@ -18,6 +18,7 @@ export class Tile extends Sprite {
 
     public originalScaleX: number = 1;
     public originalScaleY: number = 1;
+    public isActive: boolean = true;
     public type: number = 1;
     public location: { [location: string]: number } = {
         row: -1,

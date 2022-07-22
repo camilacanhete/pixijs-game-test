@@ -41,7 +41,7 @@ export class Loading extends Scene {
 
     preload(): void {
         console.log("Loading: loading starting");
-        this.loader.add(RESOURCES.ATLAS.INGAME, "/img/square_nodetails_outline.json");
+        this.loader.add(RESOURCES.ATLAS.INGAME, "/img/gameAtlas.json");
         this.loader.load();
     }
 
