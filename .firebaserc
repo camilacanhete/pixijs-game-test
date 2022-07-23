@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "camisfolio"
+  },
+  "targets": {
+    "camisfolio": {
+      "hosting": {
+        "camisfolio-pixijs": [
+          "camisfolio-pixijs"
+        ]
+      }
+    }
+  }
+}

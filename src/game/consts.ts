@@ -19,6 +19,7 @@ export class SCENES {
         BOOT: "SCENE_BOOT",
         LOADING: "SCENE_LOADING",
         INGAME: "SCENE_INGAME",
+        END: "SCENE_END",
     }
 
     static EVENTS: { [state: string]: string } = {
