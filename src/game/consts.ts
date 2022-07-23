@@ -11,6 +11,7 @@ export class GAME {
         TIMER_START: "TIMER_START",
         TIMER_COUNT: "TIMER_COUNT",
         TIMER_END: "TIMER_END",
+        SCORE_CHANGE: "SCORE_CHANGE"
     }
 }
 

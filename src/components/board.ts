@@ -1,9 +1,10 @@
 import { Container, DisplayObject } from "pixi.js";
 import { gsap } from "gsap";
-import { BOARD } from "../game/consts";
 import { Scene } from "../scenes/scene";
 import { ITileProperties, Tile } from "./tile";
 import { HUD } from "./hud";
+import { Layer } from "@pixi/layers";
+import { GAME } from "../game/consts";
 
 enum DIRECTION {
     HORIZONTAL,
@@ -24,11 +25,15 @@ export class Board extends Container {
     private isDragging: boolean = false;
     private isResizing: boolean = false;
     private swappingTiles: number = 0;
+    private layerBackground: Layer;
+    private layerForeground: Layer;
+    private evScoreChange: CustomEvent;
 
     constructor(scene: Scene) {
         super();
         Tile.SIZE = Math.min(scene.screenWidth / Board.SIZE - HUD.PADDING - HUD.WIDTH, scene.screenHeight / Board.SIZE - HUD.PADDING - HUD.HEIGHT);
         this.scene = scene;
+        this.evScoreChange = new CustomEvent(GAME.EVENTS.SCORE_CHANGE);
         this.gameArray = new Array();
         this.removeArray = new Array();
         this.tilePool = new Array();
@@ -38,10 +43,27 @@ export class Board extends Container {
         this.bindEvents();
         this.scene.addChild(this);
         this.position.set(this.scene.screenWidth / 2 - this.width / 2, this.scene.screenHeight / 2 - this.height / 2);
+        this.layerBackground = new Layer();
+        this.layerForeground = new Layer();
+        this.scene.addChild(this.layerBackground);
+        this.scene.addChild(this.layerForeground);
     }
 
     bindEvents(): void {
         this.onSelectTile = this.onSelectTile.bind(this);
+    }
+
+    removeEvents(): void {
+        this.tilePool.forEach((tile: Tile) => {
+            tile.removeEvents();
+        })
+    }
+
+    changeScore(numberOfTiles: number): void {
+        this.evScoreChange = new CustomEvent(GAME.EVENTS.SCORE_CHANGE, {
+            detail: numberOfTiles
+        });
+        window.dispatchEvent(this.evScoreChange);
     }
 
     populatePool(): void {
@@ -62,6 +84,7 @@ export class Board extends Container {
                     this.gameArray[i][j]!.position.set(Tile.SIZE * j + Tile.SIZE / 2, Tile.SIZE * i + Tile.SIZE / 2);
                     this.gameArray[i][j]!.setVirtualPosition(i, j);
                     this.gameArray[i][j]!.setTexture(randomType);
+                    this.gameArray[i][j]!.parentLayer = this.layerBackground;
                     this.addChild(this.gameArray[i][j] as Tile);
                 } while (this.isMatch(i, j));
                 //console.log(this.gameArray[i][j].location);
@@ -113,7 +136,7 @@ export class Board extends Container {
             if (tile.type !== -1) {
                 if (this.selectedTile === null) {
                     tile.scale.set(tile.originalScaleX + 0.1, tile.originalScaleY + 0.1);
-                    tile.zIndex = Board.SIZE + 100;
+                    tile.parentLayer = this.layerForeground;
                     this.selectedTile = tile;
                 }
                 else {
@@ -138,8 +161,8 @@ export class Board extends Container {
     }
 
     swapTiles(tile1: Tile, tile2: Tile, swapBack: boolean): void {
-        tile1.zIndex = 1;
-        tile2.zIndex = 1;
+        tile1.parentLayer = this.layerBackground;
+        tile2.parentLayer = this.layerBackground;
 
         this.swappingTiles = 2;
         this.canPick = false;
@@ -240,7 +263,7 @@ export class Board extends Container {
         this.markMatches(DIRECTION.HORIZONTAL);
         this.markMatches(DIRECTION.VERTICAL);
         console.log(this.removeArray);
-        this.debugTiles();
+        //this.debugTiles();
         this.destroyTiles();
     }
 
@@ -284,26 +307,29 @@ export class Board extends Container {
     }
 
     destroyTiles(): void {
+        let shouldDestroy: number = 0;
         let destroyed: number = 0;
         for (let i: number = 0; i < Board.SIZE; i++) {
             for (let j: number = 0; j < Board.SIZE; j++) {
                 if (this.removeArray[i][j] > 0) {
-                    destroyed++;
+                    shouldDestroy++;
                     this.gameArray[i][j]!.isActive = false;
                     gsap.to(this.gameArray[i][j], {
                         alpha: 0,
                         repeat: 0,
                         duration: Board.DURATION_ANIMATION,
                         onComplete: () => {
-                            destroyed--;
+                            shouldDestroy--;
+                            destroyed++;
                             this.removeChild(this.gameArray[i][j]!);
                             this.tilePool.push(this.gameArray[i][j]!);
                             this.gameArray[i][j] = null;
-                            if (destroyed === 0) {
-                                this.debugTiles();
+                            if (shouldDestroy === 0) {
+                                this.changeScore(destroyed);
+                                //this.debugTiles();
                                 this.makeTilesFall();
                                 this.fixTileLocation();
-                                this.debugTiles();
+                                //this.debugTiles();
                                 this.replenishBoard();
                             }
                         }
@@ -398,6 +424,7 @@ export class Board extends Container {
                     this.gameArray[i][j]!.row = i;
                     this.gameArray[i][j]!.col = j;
                     this.gameArray[i][j]!.setTexture(randomType);
+                    this.gameArray[i][j]!.parentLayer = this.layerBackground;
                     this.addChild(this.gameArray[i][j]!);
 
                     gsap.to(this.gameArray[i][j], {
@@ -407,7 +434,7 @@ export class Board extends Container {
                         onComplete: () => {
                             replenished--;
                             if (replenished == 0) {
-                                this.debugTiles();
+                                //this.debugTiles();
                                 if (this.matchInBoard()) {
                                     setTimeout(this.handleMatches.bind(this), 250);
                                 }

@@ -4,6 +4,7 @@ import { Scene } from "../scenes/scene";
 import { Boot } from "../scenes/boot";
 import { Loading } from "../scenes/loading";
 import { Ingame } from "../scenes/ingame";
+import { End } from "../scenes/end";
 
 export class Game extends Application {
 
@@ -39,6 +40,9 @@ export class Game extends Application {
                 break;
             case SCENES.LIST.INGAME:
                 this.scene = new Ingame(this);
+                break;
+            case SCENES.LIST.END:
+                this.scene = new End(this);
                 break;
             default:
                 this.scene = new Boot(this);
