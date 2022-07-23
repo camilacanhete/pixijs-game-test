@@ -142,6 +142,7 @@ export class Board extends Container {
                 else {
                     if (this.areTilesTheSame(tile, this.selectedTile)) {
                         this.selectedTile.scale.set(this.selectedTile.originalScaleX, this.selectedTile.originalScaleY);
+                        this.selectedTile.parentLayer = this.layerBackground;
                         this.selectedTile = null;
                     }
                     else {
@@ -152,6 +153,7 @@ export class Board extends Container {
                         else {
                             this.selectedTile.scale.set(this.selectedTile.originalScaleX, this.selectedTile.originalScaleY);
                             tile.scale.set(tile.originalScaleX + 0.1, tile.originalScaleY + 0.1);
+                            tile.parentLayer = this.layerForeground;
                             this.selectedTile = tile;
                         }
                     }
