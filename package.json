@@ -31,7 +31,7 @@
         "fontfaceobserver": "^2.3.0",
         "gsap": "^3.10.4",
         "pixi.js": "^6.4.2",
-        "regenerator-runtime": "^0.13.9"
+        "regenerator-runtime": "^0.13.10"
     },
     "devDependencies": {
         "@swc/core": "^1.2.223",
