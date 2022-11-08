@@ -26,7 +26,7 @@
     "license": "MIT",
     "dependencies": {
         "@types/fontfaceobserver": "^2.1.0",
-        "@pixi/layers": "^1.0.11",
+        "@pixi/layers": "^2.0.0",
         "core-js": "^3.24.1",
         "fontfaceobserver": "^2.3.0",
         "gsap": "^3.10.4",
