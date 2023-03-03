@@ -30,7 +30,7 @@
         "core-js": "^3.24.1",
         "fontfaceobserver": "^2.3.0",
         "gsap": "^3.10.4",
-        "pixi.js": "^6.4.2",
+        "pixi.js": "^7.1.4",
         "regenerator-runtime": "^0.13.9"
     },
     "devDependencies": {
